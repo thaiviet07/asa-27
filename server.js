@@ -45,21 +45,6 @@ function handler(req, res) {
     return;
   }
 
-  if (safePath === 'debug') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    let dirnameFiles = [];
-    let cwdFiles = [];
-    try { dirnameFiles = fs.readdirSync(__dirname); } catch (e) { dirnameFiles = [e.message]; }
-    try { cwdFiles = fs.readdirSync(process.cwd()); } catch (e) { cwdFiles = [e.message]; }
-    res.end(JSON.stringify({
-      __dirname,
-      cwd: process.cwd(),
-      dirnameFiles,
-      cwdFiles
-    }, null, 2));
-    return;
-  }
-
   // Prevent directory traversal
   let safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, '').replace(/^\//, '');
   let filePath = path.join(PUBLIC_DIR, safePath);
