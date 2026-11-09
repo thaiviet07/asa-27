@@ -1,12 +1,20 @@
 {
-  "name": "asa-studio-website",
+  "name": "mono-clone",
   "version": "1.0.0",
-  "description": "Asa Studio — Vietnamese heritage, in contemporary light. Crafted by stoopiducky.",
+  "description": "Complete clone of Mono Framer template website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "serve": "node server.js"
   },
-  "author": "stoopiducky",
+  "keywords": [
+    "framer",
+    "mono",
+    "portfolio",
+    "template",
+    "clone"
+  ],
+  "author": "",
   "license": "ISC"
 }

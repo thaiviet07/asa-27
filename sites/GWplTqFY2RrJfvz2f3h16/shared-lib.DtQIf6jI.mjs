@@ -1,0 +1,2 @@
+import{t as e}from"./rolldown-runtime.Bi-D_2cA.mjs";function t(e,t){return{description:`Mōno™ is a minimalist template designed to present your work with precision, balance, and subtle, gentle animations.`,favicon:`https://framerusercontent.com/assets/3ub1NQPLrEZdoqWpAUkWfjiirJo.png`,robots:`max-image-preview:large`,socialImage:`https://framerusercontent.com/assets/ByBigYhLel0pcvDvWPQLcZXIy5w.png`,title:`Mōno™ - Framer Template`}}function n(){return(n=e((()=>{})))()}export{t as n,n as t};
+//# sourceMappingURL=shared-lib.DtQIf6jI.mjs.map

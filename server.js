@@ -1,9 +1,10 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 
 const PORT = process.env.PORT || 3000;
-const ROOT = __dirname;
+const PUBLIC_DIR = __dirname;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -14,101 +15,124 @@ const MIME_TYPES = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
   '.webp': 'image/webp',
+  '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
   '.ttf': 'font/ttf',
+  '.otf': 'font/otf',
   '.mp4': 'video/mp4',
   '.webm': 'video/webm',
   '.xml': 'application/xml',
-  '.txt': 'text/plain'
+  '.txt': 'text/plain; charset=utf-8',
+  '.map': 'application/json'
 };
 
 const server = http.createServer((req, res) => {
-  let parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  const parsedUrl = url.parse(req.url);
   let pathname = decodeURIComponent(parsedUrl.pathname);
 
-  // Normalise pathname
-  if (pathname.endsWith('/') && pathname.length > 1) {
-    pathname = pathname.slice(0, -1);
+  // Default security headers & CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
   }
 
-  // Security check: prevent directory traversal
+  // Prevent directory traversal
   let safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, '');
-  let filePath = path.join(ROOT, safePath);
+  let filePath = path.join(PUBLIC_DIR, safePath);
 
-  // Check possible file candidates
-  let candidates = [];
-  if (pathname === '/') {
-    candidates.push(path.join(ROOT, 'index.html'));
-  } else {
-    candidates.push(filePath);
-    candidates.push(path.join(filePath, 'index.html'));
-    candidates.push(filePath + '.html');
-  }
-
-  let foundFile = null;
-  for (let c of candidates) {
-    if (fs.existsSync(c) && fs.statSync(c).isFile()) {
-      foundFile = c;
-      break;
-    }
-  }
-
-  if (foundFile) {
-    let ext = path.extname(foundFile).toLowerCase();
-    let contentType = MIME_TYPES[ext] || 'application/octet-stream';
-
-    // CORS headers to ensure scripts and fonts load smoothly
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', contentType);
-
-    // Support range requests for video
-    if (ext === '.mp4') {
-      const stat = fs.statSync(foundFile);
-      const fileSize = stat.size;
-      const range = req.headers.range;
-
-      if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-        const chunksize = (end - start) + 1;
-        const file = fs.createReadStream(foundFile, { start, end });
-        res.writeHead(206, {
-          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-          'Accept-Ranges': 'bytes',
-          'Content-Length': chunksize,
-          'Content-Type': contentType,
-        });
-        file.pipe(res);
-        return;
-      } else {
-        res.writeHead(200, {
-          'Content-Length': fileSize,
-          'Accept-Ranges': 'bytes',
-          'Content-Type': contentType,
-        });
-        fs.createReadStream(foundFile).pipe(res);
+  function serveFile(targetPath, statusCode = 200) {
+    fs.stat(targetPath, (err, stats) => {
+      if (err || !stats.isFile()) {
+        serve404();
         return;
       }
-    }
 
-    fs.createReadStream(foundFile).pipe(res);
-  } else {
-    // 404 fallback
-    const notFoundPath = path.join(ROOT, '404.html');
-    if (fs.existsSync(notFoundPath)) {
-      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      fs.createReadStream(notFoundPath).pipe(res);
-    } else {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-    }
+      const ext = path.extname(targetPath).toLowerCase();
+      const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+      // Support Range requests (especially for MP4 videos)
+      const range = req.headers.range;
+      if (range && stats.size > 0) {
+        const parts = range.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
+        const chunksize = end - start + 1;
+
+        res.writeHead(206, {
+          'Content-Range': `bytes ${start}-${end}/${stats.size}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': contentType
+        });
+
+        const stream = fs.createReadStream(targetPath, { start, end });
+        stream.pipe(res);
+      } else {
+        res.writeHead(statusCode, {
+          'Content-Length': stats.size,
+          'Content-Type': contentType,
+          'Accept-Ranges': 'bytes'
+        });
+
+        const stream = fs.createReadStream(targetPath);
+        stream.pipe(res);
+      }
+    });
   }
+
+  function serve404() {
+    const notFoundPath = path.join(PUBLIC_DIR, '404.html');
+    fs.access(notFoundPath, fs.constants.F_OK, (err) => {
+      if (!err) {
+        serveFile(notFoundPath, 404);
+      } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+      }
+    });
+  }
+
+  fs.stat(filePath, (err, stats) => {
+    if (!err && stats.isDirectory()) {
+      const indexPath = path.join(filePath, 'index.html');
+      fs.access(indexPath, fs.constants.F_OK, (indexErr) => {
+        if (!indexErr) {
+          serveFile(indexPath);
+        } else {
+          serve404();
+        }
+      });
+    } else if (!err && stats.isFile()) {
+      serveFile(filePath);
+    } else {
+      // Check if adding .html finds a file (clean URLs)
+      const htmlPath = filePath + '.html';
+      fs.access(htmlPath, fs.constants.F_OK, (htmlErr) => {
+        if (!htmlErr) {
+          serveFile(htmlPath);
+        } else {
+          // Check if it's a directory with index.html without trailing slash
+          const dirIndexPath = path.join(filePath, 'index.html');
+          fs.access(dirIndexPath, fs.constants.F_OK, (dirErr) => {
+            if (!dirErr) {
+              serveFile(dirIndexPath);
+            } else {
+              serve404();
+            }
+          });
+        }
+      });
+    }
+  });
 });
 
 server.listen(PORT, () => {

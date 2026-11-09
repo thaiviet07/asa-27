@@ -1,0 +1,2 @@
+import{t as e}from"./rolldown-runtime.Bi-D_2cA.mjs";import{Q as t,R as n}from"./framer.CNOPdnUp.mjs";var r,i,a;function o(){return(o=e((()=>{t(),n.loadFonts([]),r=[{explicitInter:!0,fonts:[]}],i=[`.framer-AORaR .framer-styles-preset-ykft4n:not(.rich-text-wrapper), .framer-AORaR .framer-styles-preset-ykft4n.rich-text-wrapper a { --framer-link-text-decoration: underline; }`],a=`framer-AORaR`})))()}export{o as i,i as n,r,a as t};
+//# sourceMappingURL=zKkqFOZ51.vLvJWLGD.mjs.map

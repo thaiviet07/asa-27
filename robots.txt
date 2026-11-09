@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://asastudio.co/sitemap.xml
+Sitemap: /sitemap.xml
