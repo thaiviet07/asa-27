@@ -1,4 +1,43 @@
 {
+  "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/work",
+      "dest": "/work.html"
+    },
+    {
+      "src": "/studio",
+      "dest": "/studio.html"
+    },
+    {
+      "src": "/blog",
+      "dest": "/blog.html"
+    },
+    {
+      "src": "/contact",
+      "dest": "/contact.html"
+    },
+    {
+      "src": "/contact-1",
+      "dest": "/contact-1.html"
+    },
+    {
+      "src": "/work/(.*)",
+      "dest": "/work/$1.html"
+    },
+    {
+      "src": "/blog/(.*)",
+      "dest": "/blog/$1.html"
+    },
+    {
+      "src": "/(.*)",
+      "status": 404,
+      "dest": "/404.html"
+    }
+  ]
 }
