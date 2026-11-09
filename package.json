@@ -1,20 +1,19 @@
 {
-  "name": "mono-clone",
+  "name": "asa-studio",
   "version": "1.0.0",
-  "description": "Complete clone of Mono Framer template website",
-  "main": "server.js",
+  "description": "ASA Studio - Lamp and Decoration Production Studio, HCMC, Vietnam",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "serve": "node server.js"
+    "build": "echo 'Static site ready for Vercel deployment'",
+    "start": "node scripts/dev-server.js",
+    "dev": "node scripts/dev-server.js"
   },
   "keywords": [
-    "framer",
-    "mono",
-    "portfolio",
-    "template",
-    "clone"
+    "asa-studio",
+    "lighting",
+    "decor",
+    "production-studio",
+    "vietnam"
   ],
-  "author": "",
+  "author": "ASA Studio",
   "license": "ISC"
 }
