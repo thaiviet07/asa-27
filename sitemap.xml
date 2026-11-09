@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>/</loc></url>
-<url><loc>/contact-1</loc></url>
 <url><loc>/studio</loc></url>
-<url><loc>/blog-2</loc></url>
-<url><loc>/blog-3</loc></url>
-<url><loc>/work-2</loc></url>
-<url><loc>/work-3</loc></url>
 <url><loc>/work</loc></url>
-<url><loc>/contact-2</loc></url>
-<url><loc>/contact-3</loc></url>
-<url><loc>/blog</loc></url>
 <url><loc>/work/forma-digital</loc></url>
 <url><loc>/work/nero-vision</loc></url>
 <url><loc>/work/one-step</loc></url>
 <url><loc>/work/bold-moves</loc></url>
+<url><loc>/blog</loc></url>
 <url><loc>/blog/from-idea-to-execution-building-products-that-last</loc></url>
 <url><loc>/blog/designing-digital-systems-that-scale-your-business</loc></url>
 <url><loc>/blog/the-power-of-simplicity-in-modern-real-brand-design</loc></url>
 <url><loc>/blog/why-great-brands-are-built-on-clarity-not-complexity</loc></url>
+<url><loc>/contact</loc></url>
 </urlset>

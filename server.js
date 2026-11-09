@@ -46,7 +46,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Prevent directory traversal
-  let safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, '');
+  let safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, '').replace(/^\//, '');
   let filePath = path.join(PUBLIC_DIR, safePath);
 
   function serveFile(targetPath, statusCode = 200) {
@@ -101,6 +101,35 @@ const server = http.createServer((req, res) => {
     });
   }
 
+  function tryResolve(paths, callback) {
+    if (paths.length === 0) {
+      return callback(null);
+    }
+    const current = paths[0];
+    fs.stat(current, (err, stats) => {
+      if (!err && stats.isFile()) {
+        return callback(current);
+      }
+      tryResolve(paths.slice(1), callback);
+    });
+  }
+
+  let candidates = [filePath];
+  if (safePath.startsWith('assets/')) {
+    const sub = safePath.slice('assets/'.length);
+    candidates.push(
+      path.join(PUBLIC_DIR, 'assets', 'fonts', sub),
+      path.join(PUBLIC_DIR, 'assets', 'images', sub),
+      path.join(PUBLIC_DIR, 'assets', 'videos', sub),
+      path.join(PUBLIC_DIR, 'images', sub)
+    );
+  } else if (safePath.startsWith('images/')) {
+    const sub = safePath.slice('images/'.length);
+    candidates.push(
+      path.join(PUBLIC_DIR, 'assets', 'images', sub)
+    );
+  }
+
   fs.stat(filePath, (err, stats) => {
     if (!err && stats.isDirectory()) {
       const indexPath = path.join(filePath, 'index.html');
@@ -114,22 +143,29 @@ const server = http.createServer((req, res) => {
     } else if (!err && stats.isFile()) {
       serveFile(filePath);
     } else {
-      // Check if adding .html finds a file (clean URLs)
-      const htmlPath = filePath + '.html';
-      fs.access(htmlPath, fs.constants.F_OK, (htmlErr) => {
-        if (!htmlErr) {
-          serveFile(htmlPath);
-        } else {
-          // Check if it's a directory with index.html without trailing slash
-          const dirIndexPath = path.join(filePath, 'index.html');
-          fs.access(dirIndexPath, fs.constants.F_OK, (dirErr) => {
-            if (!dirErr) {
-              serveFile(dirIndexPath);
-            } else {
-              serve404();
-            }
-          });
+      tryResolve(candidates.slice(1), (matched) => {
+        if (matched) {
+          serveFile(matched);
+          return;
         }
+
+        // Check if adding .html finds a file (clean URLs)
+        const htmlPath = filePath + '.html';
+        fs.access(htmlPath, fs.constants.F_OK, (htmlErr) => {
+          if (!htmlErr) {
+            serveFile(htmlPath);
+          } else {
+            // Check if it's a directory with index.html without trailing slash
+            const dirIndexPath = path.join(filePath, 'index.html');
+            fs.access(dirIndexPath, fs.constants.F_OK, (dirErr) => {
+              if (!dirErr) {
+                serveFile(dirIndexPath);
+              } else {
+                serve404();
+              }
+            });
+          }
+        });
       });
     }
   });
