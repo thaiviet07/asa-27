@@ -30,7 +30,7 @@ const MIME_TYPES = {
   '.map': 'application/json'
 };
 
-const server = http.createServer((req, res) => {
+function handler(req, res) {
   const parsedUrl = url.parse(req.url);
   let pathname = decodeURIComponent(parsedUrl.pathname);
 
@@ -169,10 +169,14 @@ const server = http.createServer((req, res) => {
       });
     }
   });
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
-});
+const server = http.createServer(handler);
 
-module.exports = server;
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}/`);
+  });
+}
+
+module.exports = handler;
