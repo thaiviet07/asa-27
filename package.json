@@ -1,0 +1,19 @@
+{
+  "name": "monod-framer-clone",
+  "version": "1.0.0",
+  "description": "Complete, pixel-perfect clone of Mōno™ (monod.framer.website)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "framer",
+    "portfolio",
+    "minimalist",
+    "clone",
+    "website"
+  ],
+  "author": "",
+  "license": "ISC"
+}

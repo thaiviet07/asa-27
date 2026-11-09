@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://monod.framer.website/sitemap.xml
