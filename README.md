@@ -1,10 +1,10 @@
-# Mōno™ Framer Website Clone
+# ASA™ Framer Website Clone
 
-A 1:1 complete, fully functional clone of the [Mōno™ Framer template website](https://monod.framer.website/).
+A 1:1 complete, fully functional clone of the [ASA™ Framer template website](https://asastudio.vn/).
 
 ## 🌟 Overview
 
-This repository contains the complete clone of the Mōno™ minimalist portfolio website, including:
+This repository contains the complete clone of the ASA™ minimalist portfolio website, including:
 - **All 19 Pages + Custom 404 Page**:
   - **Home**: [`/`](file:///Users/heymac/Desktop/ASA1/index.html)
   - **Studio**: [`/studio`](file:///Users/heymac/Desktop/ASA1/studio/index.html)
