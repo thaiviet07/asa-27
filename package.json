@@ -2,7 +2,6 @@
   "name": "asa-studio",
   "version": "1.0.0",
   "description": "ASA Studio - Lamp and Decoration Production Studio, HCMC, Vietnam",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
