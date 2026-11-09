@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "ASA Studio - Lamp and Decoration Production Studio, HCMC, Vietnam",
   "scripts": {
-    "build": "echo 'Static site ready for Vercel deployment'",
     "start": "node scripts/dev-server.js",
     "dev": "node scripts/dev-server.js"
   },
