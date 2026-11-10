@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="currentColor">
+    <path d="M40 18 L32 36 L40 44 L44 36 L40 28 L48 20 Z" fill="currentColor"/>
+    <path d="M52 18 L60 36 L52 44 L48 36 L52 28 L44 20 Z" fill="currentColor"/>
+    <text x="125" y="34" font-family="Inter, sans-serif" font-weight="800" font-size="16" text-anchor="middle" letter-spacing="3">VINFAST</text>
+    <text x="125" y="46" font-family="Inter, sans-serif" font-weight="600" font-size="8" text-anchor="middle" letter-spacing="3">VF9 SPECIAL EDITION</text>
+  </svg>

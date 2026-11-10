@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "ASA Studio - Lamp and Decoration Production Studio, HCMC, Vietnam",
   "scripts": {
-    "build": "node -e 'console.log(\"Build ready\")'",
+    "build": "node scripts/build.js",
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node scripts/dev.js"
   },
   "keywords": [
     "asa-studio",
